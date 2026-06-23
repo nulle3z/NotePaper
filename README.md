@@ -2,7 +2,7 @@
 在线剪贴板服务器。概念源于Note.ms。
 
 > [!WARNING]
-> note.ect.fyi 目前已经下线。详见Issue #10。可以在 https://info.ect.fyi/rescue/ 找回自己的笔记。
+> note.ect.fyi 目前已经下线。详见Issue [#10](https://github.com/rHanbowChic/NotePaper/issues/10) 。可以在 https://info.ect.fyi/rescue/ 找回自己的笔记。
 
 ## 包含功能
 * 复刻了所有 Note.ms 发现的功能
