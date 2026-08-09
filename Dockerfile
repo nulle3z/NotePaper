@@ -1,21 +1,27 @@
-# 使用官方 Python 作为基础镜像
 FROM python:3.9-slim
 
-# 设置工作目录
+ENV PYTHONUNBUFFERED=1 \
+    PORT=5000
+
+RUN adduser --disabled-password --gecos '' appuser
+
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# 复制应用代码到容器中
-COPY . .
-
-# 安装依赖
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 设置 Flask 运行时环境变量
-ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_RUN_PORT=5000
+COPY . .
 
-# 暴露端口
-EXPOSE 5000
+RUN chown -R appuser:appuser /app
 
-# 启动 Flask 应用
-CMD ["flask", "run"]
+USER appuser
+
+EXPOSE ${PORT}
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:${PORT}/ || exit 1
+
+CMD ["sh", "-c", "gunicorn -k eventlet -w 1 -b 0.0.0.0:${PORT} app:app"]
+
